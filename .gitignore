@@ -4,3 +4,4 @@ mlruns
 *.bin
 .metrics
 example_output
+.vscode

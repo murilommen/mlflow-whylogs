@@ -1,5 +1,3 @@
-import json
-
 import mlflow
 import pandas as pd
 import cloudpickle
@@ -112,7 +110,7 @@ with mlflow.start_run() as run:
         artifacts=artifacts,
         python_model = model,
         conda_env = None,
-        pip_requirements=["sklearn==1.2.2", "mlflow=2.3.2", "dill", "pandas", "whylogs[whylabs]"]
+        pip_requirements=["sklearn==1.2.2", "mlflow==2.3.2", "whylogs[whylabs]==1.1.44"]
     )
 
     print(run.info.run_id)
