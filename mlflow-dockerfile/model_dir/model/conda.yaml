@@ -1,0 +1,10 @@
+channels:
+- conda-forge
+dependencies:
+- python=3.10.6
+- pip<=22.0.2
+- pip:
+  - sklearn==1.2.2
+  - mlflow==2.3.2
+  - whylogs[whylabs]==1.1.44
+name: mlflow-env

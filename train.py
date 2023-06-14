@@ -1,7 +1,4 @@
-import os
-import sys
 import mlflow
-import time
 import pandas as pd
 import cloudpickle
 import pickle
@@ -11,23 +8,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
-import signal
-from contextlib import contextmanager
-from typing import Any
-from threading import Thread
 import atexit
-
-
-# @contextmanager
-# def suspended_signals(*signals: Any) -> Any:
-#     """
-#     Suspends signal handling execution
-#     """
-#     signal.pthread_sigmask(signal.SIG_BLOCK, set(signals))
-#     try:
-#         yield None
-#     finally:
-#         signal.pthread_sigmask(signal.SIG_UNBLOCK, set(signals))
 
 
 class MyModelWrapper(mlflow.pyfunc.PythonModel):
