@@ -1,7 +1,7 @@
 import mlflow
 import pandas as pd
 
-logged_model = 'runs:/8772de8e19e84d2fb43ecdbe2100f602/model'
+logged_model = 'runs:/215cedb88ff347f8923724d8e124df09/model'
 loaded_model = mlflow.pyfunc.load_model(logged_model)
 
 data = pd.DataFrame({"a": [1], "b": [2], "c": [3], "d": [4]})

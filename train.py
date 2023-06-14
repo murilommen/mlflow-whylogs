@@ -1,16 +1,33 @@
-import json
-
+import os
+import sys
 import mlflow
+import time
 import pandas as pd
 import cloudpickle
 import pickle
-import requests
 import whylogs as why
 from sklearn.datasets import load_iris
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
+import signal
+from contextlib import contextmanager
+from typing import Any
+from threading import Thread
+import atexit
+
+
+# @contextmanager
+# def suspended_signals(*signals: Any) -> Any:
+#     """
+#     Suspends signal handling execution
+#     """
+#     signal.pthread_sigmask(signal.SIG_BLOCK, set(signals))
+#     try:
+#         yield None
+#     finally:
+#         signal.pthread_sigmask(signal.SIG_UNBLOCK, set(signals))
 
 
 class MyModelWrapper(mlflow.pyfunc.PythonModel):
@@ -22,14 +39,16 @@ class MyModelWrapper(mlflow.pyfunc.PythonModel):
 
     def _start_logger(self):
         self.logger = why.logger(mode="rolling", interval=5, when="M",
-                                base_name="message_profile")
+                    base_name="message_profile")
 
         self.logger.append_writer("local", base_dir="example_output")
+        
+        @atexit.register
+        def close():
+            print("atexit called")
+            if self.logger:
+                self.logger.close()
     
-    def __del__(self):
-        # On exit the rest of the logging will be saved
-        if self.logger:
-            self.logger.close()
     
     def load_context(self, context):
         with open(context.artifacts["preprocessor"], "rb") as f:
@@ -86,7 +105,7 @@ class MyModelWrapper(mlflow.pyfunc.PythonModel):
         
         return predictions
 
-
+        
 def read_data() -> pd.DataFrame:
     data = load_iris()
     df = pd.DataFrame(data.data)
@@ -112,7 +131,7 @@ with mlflow.start_run() as run:
         artifacts=artifacts,
         python_model = model,
         conda_env = None,
-        pip_requirements=["sklearn==1.2.2", "mlflow=2.3.2", "dill", "pandas", "whylogs[whylabs]"]
+        pip_requirements=["scikit-learn==1.2.2", "mlflow==2.3.2", "pandas", "whylogs[whylabs]"]
     )
 
     print(run.info.run_id)

@@ -4,3 +4,6 @@ mlruns
 *.bin
 .metrics
 example_output
+local.env
+mlflow-dockerfile
+.vscode
